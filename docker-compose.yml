@@ -1,0 +1,9 @@
+version: '3'
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --requirepass XXX_SET_PASS_XXX
+    network_mode: "host"  # TODO FIXME
+    volumes:
+      - ./data/redis_data:/data

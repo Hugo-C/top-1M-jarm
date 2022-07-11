@@ -1,0 +1,6 @@
+.idea/
+target/
+data/
+
+result.csv
+top-1m.csv
