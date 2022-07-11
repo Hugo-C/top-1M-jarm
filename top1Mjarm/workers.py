@@ -32,7 +32,11 @@ def jarm() -> Website:
 
 
 def write_to_csv():
-    """Append the job's result website to the aggregation csv"""
+    """
+    Append the job's result website to the aggregation csv
+    Return OK so as to not have a None return value, which is incompatible with scheduler.py's logic
+    """
     with open(CSV_RESULT_PATH, 'a') as csv_file:
         website = retrieve_dependant_job_result()
         csv_file.write(website.to_csv_line() + '\n')
+    return 'OK'
