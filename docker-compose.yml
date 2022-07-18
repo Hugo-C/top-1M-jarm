@@ -18,16 +18,46 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 30s
+      resources:
+        limits:
+          cpus: '1'
+          memory: 100M
 
   redis_queue:
     image: redis:7-alpine
     command: redis-server --requirepass XXX_SET_REDIS_PASS_XXX
     volumes:
       - ./data/redis_data:/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1'
+          memory: 50M
 
   worker:
     image: top-1m-jarm:latest
-    command: poetry run rq worker --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
+    command: poetry run rq worker default domains ips --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
+    depends_on:
+      - redis_queue
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 30s
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
+      update_config:
+        parallelism: 0  # Restart all at the same time
+      mode: replicated
+      replicas: 4
+
+  csv_writer:  # Special worker that only take care of writing the csv result file
+    image: top-1m-jarm:latest
+    command: poetry run rq worker jarm_result --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
     depends_on:
       - redis_queue
     volumes:
@@ -38,7 +68,7 @@ services:
         condition: on-failure
         max_attempts: 3
         delay: 30s
-      update_config:
-        parallelism: 0  # Restart all at the same time
-      mode: replicated
-      replicas: 4
+      resources:
+        limits:
+          cpus: '1'
+          memory: 100M

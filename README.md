@@ -33,9 +33,8 @@ Run `poetry install` to install dependencies.
 This project use [PyO3](https://github.com/PyO3/pyo3) to bind rust code, to use it run `maturin develop --locked --release`  
 
 ## Running
-This project use docker swarm.
+This project use docker swarm (might require `docker swarm init`).
 ```shell
-docker swarm init
 docker stack deploy --compose-file docker-compose.yml top1MjarmStack
 docker stack ls
 docker service ls
@@ -44,7 +43,7 @@ docker service logs top1MjarmStack_scheduler -f
 
 To monitor the queue:
 ```shell
-docker exec -it $(docker ps -qf "name=top1MjarmStack_worker" | head -n 1) poetry run rq info --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 -i 1
+docker exec -it $(docker ps -qf "name=top1MjarmStack_csv_writer" | head -n 1) poetry run rq info default domains ips jarm_result --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 -i 1
 ```
 
 To remove the running containers:

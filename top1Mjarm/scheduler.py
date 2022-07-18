@@ -29,11 +29,13 @@ def report_failure(job, connection, type, value, traceback):
 def main():
     queued_jobs = []
     redis_conn = Redis(host='redis_queue', port=6379, db=0, password='XXX_SET_REDIS_PASS_XXX')  # TODO password
-    q = Queue(connection=redis_conn)
-    for website in websites(limit=10):
-        dns_job = q.enqueue(workers.dns, website, result_ttl=RESULT_TTL)
-        jarm_job = q.enqueue(workers.jarm, depends_on=dns_job, result_ttl=RESULT_TTL)
-        csv_aggregation_job = q.enqueue(workers.write_to_csv, depends_on=jarm_job, result_ttl=RESULT_TTL)
+    domains_q = Queue(name='domains', connection=redis_conn)
+    ips_q = Queue(name='ips', connection=redis_conn)
+    jarm_result_q = Queue(name='jarm_result', connection=redis_conn)
+    for website in websites(limit=1_000):
+        dns_job = domains_q.enqueue(workers.dns, website, result_ttl=RESULT_TTL)
+        jarm_job = ips_q.enqueue(workers.jarm, depends_on=dns_job, result_ttl=RESULT_TTL)
+        csv_aggregation_job = jarm_result_q.enqueue(workers.write_to_csv, depends_on=jarm_job, result_ttl=RESULT_TTL)
         queued_jobs.append((website, csv_aggregation_job))
 
     spinner = Halo(text='Processing', spinner='triangle')
