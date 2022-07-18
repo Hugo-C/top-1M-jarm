@@ -1,9 +1,44 @@
-version: '3'
+version: '3.8'
 services:
-  redis:
+
+  scheduler:
+    image: top-1m-jarm:latest
+    command: poetry run python /code/top1Mjarm/scheduler.py
+    depends_on:
+      - redis_queue
+      - worker
+    environment:
+      REDIS_HOST: redis_queue
+      REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
+    volumes:
+#      - path/to/top-1m.csv:/code/top-1m.csv
+      - ./top-1m.csv:/code/top-1m.csv
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 30s
+
+  redis_queue:
     image: redis:7-alpine
-    container_name: redis
-    command: redis-server --requirepass XXX_SET_PASS_XXX
-    network_mode: "host"  # TODO FIXME
+    command: redis-server --requirepass XXX_SET_REDIS_PASS_XXX
     volumes:
       - ./data/redis_data:/data
+
+  worker:
+    image: top-1m-jarm:latest
+    command: poetry run rq worker --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
+    depends_on:
+      - redis_queue
+    volumes:
+#      - path/to/result.csv:/code/result.csv
+      - ./result.csv:/code/result.csv
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 30s
+      update_config:
+        parallelism: 0  # Restart all at the same time
+      mode: replicated
+      replicas: 4

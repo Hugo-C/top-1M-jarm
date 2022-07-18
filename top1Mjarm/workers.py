@@ -17,7 +17,7 @@ def dns(website: Website) -> Website:
 
 
 def retrieve_dependant_job_result():
-    redis_conn = Redis(host='localhost', port=6379, db=0, password='XXX_SET_PASS_XXX')  # TODO remove duplicate conn
+    redis_conn = Redis(host='redis_queue', port=6379, db=0, password='XXX_SET_REDIS_PASS_XXX')  # TODO remove duplicate conn
     current_job = get_current_job(redis_conn)
     jobs = current_job.fetch_dependencies()
     assert len(jobs) == 1

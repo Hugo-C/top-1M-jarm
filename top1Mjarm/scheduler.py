@@ -28,7 +28,7 @@ def report_failure(job, connection, type, value, traceback):
 
 def main():
     queued_jobs = []
-    redis_conn = Redis(host='localhost', port=6379, db=0, password='XXX_SET_PASS_XXX')  # TODO password
+    redis_conn = Redis(host='redis_queue', port=6379, db=0, password='XXX_SET_REDIS_PASS_XXX')  # TODO password
     q = Queue(connection=redis_conn)
     for website in websites(limit=10):
         dns_job = q.enqueue(workers.dns, website, result_ttl=RESULT_TTL)

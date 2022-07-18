@@ -28,9 +28,27 @@ flowchart LR
    scanResultQueue--> workerAggregation[Aggregates results in a single CSV]
 ```
 
-## Set up
+## Set up for development
 Run `poetry install` to install dependencies.  
 This project use [PyO3](https://github.com/PyO3/pyo3) to bind rust code, to use it run `maturin develop --locked --release`  
 
 ## Running
-Start redis with `docker-compose up`, start rq with `rq worker --with-scheduler --url redis://:XXX_SET_PASS_XXX@localhost:6379 --sentry-dsn XXX_SET_SENTRY_DSN_XXX`. Then start the scheduler with `poetry run top1Mjarm/scheduler.py`
+This project use docker swarm.
+```shell
+docker swarm init
+docker stack deploy --compose-file docker-compose.yml top1MjarmStack
+docker stack ls
+docker service ls
+docker service logs top1MjarmStack_scheduler -f
+```
+
+To monitor the queue:
+```shell
+docker exec -it $(docker ps -qf "name=top1MjarmStack_worker" | head -n 1) poetry run rq info --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 -i 1
+```
+
+To remove the running containers:
+```shell
+docker stack rm top1MjarmStack
+docker stack ls
+```
