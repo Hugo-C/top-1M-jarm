@@ -1,13 +1,17 @@
 import datetime
 from typing import Generator
 
+import sentry_sdk
 from halo import Halo
 from rq import Queue
 from redis import Redis
 import time
 import csv
 
+from sentry_sdk import capture_message
+
 from top1Mjarm import workers
+from top1Mjarm.config import SENTRY_DSN
 from top1Mjarm.domain import Website
 
 RESULT_TTL = None  # results should be kept forever
@@ -23,19 +27,22 @@ def websites(limit: int = None) -> Generator[Website, None, None]:
 
 
 def report_failure(job, connection, type, value, traceback):
-    print('---nay---')
+    capture_message(f'{job} failed: {value}', level='error')
 
 
 def main():
+    sentry_sdk.init(dsn=SENTRY_DSN)
+    enqueue_common_arg = {'on_failure': report_failure, 'result_ttl': RESULT_TTL}
+
     queued_jobs = []
     redis_conn = Redis(host='redis_queue', port=6379, db=0, password='XXX_SET_REDIS_PASS_XXX')  # TODO password
     domains_q = Queue(name='domains', connection=redis_conn)
     ips_q = Queue(name='ips', connection=redis_conn)
     jarm_result_q = Queue(name='jarm_result', connection=redis_conn)
-    for website in websites(limit=1_000):
-        dns_job = domains_q.enqueue(workers.dns, website, result_ttl=RESULT_TTL)
-        jarm_job = ips_q.enqueue(workers.jarm, depends_on=dns_job, result_ttl=RESULT_TTL)
-        csv_aggregation_job = jarm_result_q.enqueue(workers.write_to_csv, depends_on=jarm_job, result_ttl=RESULT_TTL)
+    for website in websites(limit=10):
+        dns_job = domains_q.enqueue(workers.dns, website, **enqueue_common_arg)
+        jarm_job = ips_q.enqueue(workers.jarm, depends_on=dns_job, **enqueue_common_arg)
+        csv_aggregation_job = jarm_result_q.enqueue(workers.write_to_csv, depends_on=jarm_job, **enqueue_common_arg)
         queued_jobs.append((website, csv_aggregation_job))
 
     spinner = Halo(text='Processing', spinner='triangle')

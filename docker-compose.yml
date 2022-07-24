@@ -72,3 +72,5 @@ services:
         limits:
           cpus: '1'
           memory: 100M
+      mode: replicated
+      replicas: 1
