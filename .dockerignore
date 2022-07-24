@@ -1,6 +1,9 @@
 .idea/
+.git
 target/
 data/
+
+docker-compose.yml
 
 result.csv
 top-1m.csv

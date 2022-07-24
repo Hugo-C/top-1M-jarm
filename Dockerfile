@@ -7,6 +7,7 @@ ENV LANG=C.UTF-8 \
   PIP_DISABLE_PIP_VERSION_CHECK=on
 
 # install rust and cargo
+# TODO rust toolchain should be removed from final image using build stage
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 WORKDIR /code
