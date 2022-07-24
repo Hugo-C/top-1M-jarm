@@ -11,8 +11,7 @@ services:
       REDIS_HOST: redis_queue
       REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
     volumes:
-#      - path/to/top-1m.csv:/code/top-1m.csv
-      - ./top-1m.csv:/code/top-1m.csv
+      - path/to/top-1m.csv:/code/top-1m.csv
     deploy:
       restart_policy:
         condition: on-failure
@@ -41,6 +40,9 @@ services:
     command: poetry run rq worker default domains ips --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
     depends_on:
       - redis_queue
+    environment:
+      REDIS_HOST: redis_queue
+      REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
     deploy:
       restart_policy:
         condition: on-failure
@@ -60,9 +62,11 @@ services:
     command: poetry run rq worker jarm_result --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
     depends_on:
       - redis_queue
+    environment:
+      REDIS_HOST: redis_queue
+      REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
     volumes:
-#      - path/to/result.csv:/code/result.csv
-      - ./result.csv:/code/result.csv
+     - path/to/result.csv:/code/result.csv
     deploy:
       restart_policy:
         condition: on-failure

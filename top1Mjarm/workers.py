@@ -1,11 +1,10 @@
 import socket
 
-from redis.client import Redis
-from rq.job import Job, get_current_job
+import rust
+from rq.job import get_current_job
 
 from top1Mjarm.domain import Website
-
-import rust
+from top1Mjarm.redis_connection import redis_connection
 
 CSV_RESULT_PATH = 'result.csv'
 
@@ -17,8 +16,7 @@ def dns(website: Website) -> Website:
 
 
 def retrieve_dependant_job_result():
-    redis_conn = Redis(host='redis_queue', port=6379, db=0, password='XXX_SET_REDIS_PASS_XXX')  # TODO remove duplicate conn
-    current_job = get_current_job(redis_conn)
+    current_job = get_current_job(redis_connection)
     jobs = current_job.fetch_dependencies()
     assert len(jobs) == 1
     return jobs[0].result
