@@ -51,3 +51,9 @@ To remove the running containers:
 docker stack rm top1MjarmStack
 docker stack ls
 ```
+
+## Push to docker hub
+```shell
+docker build -t hugocker/top-1m-jarm --pull --no-cache .
+docker push hugocker/top-1m-jarm
+```
