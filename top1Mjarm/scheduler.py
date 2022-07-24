@@ -37,7 +37,7 @@ def main():
     domains_q = Queue(name='domains', connection=redis_connection)
     ips_q = Queue(name='ips', connection=redis_connection)
     jarm_result_q = Queue(name='jarm_result', connection=redis_connection)
-    for website in websites(limit=10):
+    for website in websites():
         dns_job = domains_q.enqueue(workers.dns, website, **enqueue_common_arg)
         jarm_job = ips_q.enqueue(workers.jarm, depends_on=dns_job, **enqueue_common_arg)
         csv_aggregation_job = jarm_result_q.enqueue(workers.write_to_csv, depends_on=jarm_job, **enqueue_common_arg)
