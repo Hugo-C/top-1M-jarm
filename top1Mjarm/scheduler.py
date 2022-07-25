@@ -3,6 +3,7 @@ import datetime
 import time
 from typing import Generator
 
+import chrono
 import sentry_sdk
 from halo import Halo
 from rq import Queue
@@ -47,17 +48,19 @@ def main():
     spinner.start()
     nb_domains = len(queued_jobs)
     start_time = time.time()
-    for i, (website, job) in enumerate(queued_jobs):
-        domain_start_time = time.time()
-        while job.result is None:
-            now = time.time()
-            total_time_spent = datetime.timedelta(seconds=round(now - start_time))
-            domain_wait = datetime.timedelta(seconds=round(now - domain_start_time))
-            spinner.text = f'{i}/{nb_domains}, ' \
-                           f'waiting for {website.domain} ({domain_wait}), ' \
-                           f'total: {total_time_spent}'
-            time.sleep(0.5)
-            job.refresh()
+    with chrono.progress("Top 1M jarm", len(queued_jobs)) as progress_bar:
+        for i, (website, job) in enumerate(queued_jobs):
+            domain_start_time = time.time()
+            while job.result is None:
+                now = time.time()
+                total_time_spent = datetime.timedelta(seconds=round(now - start_time))
+                domain_wait = datetime.timedelta(seconds=round(now - domain_start_time))
+                spinner.text = f'{i}/{nb_domains}, ' \
+                               f'waiting for {website.domain} ({domain_wait}), ' \
+                               f'total: {total_time_spent}'
+                time.sleep(0.5)
+                job.refresh()
+            progress_bar.update()
     now = time.time()
     total_time_spent = datetime.timedelta(seconds=round(now - start_time))
     spinner.succeed(text=f'All {nb_domains} domains processed in {total_time_spent}')

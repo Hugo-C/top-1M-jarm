@@ -10,6 +10,8 @@ services:
     environment:
       REDIS_HOST: redis_queue
       REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
+      SENTRY_DSN: XXX_SET_SENTRY_DSN_XXX
+      SHODAN_API_KEY: XXX_SET_SHODAN_API_KEY_XXX  # leave as is if you don't have an aoi key
     volumes:
       - path/to/top-1m.csv:/code/top-1m.csv
     deploy:
