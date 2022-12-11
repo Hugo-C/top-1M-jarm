@@ -31,6 +31,7 @@ flowchart LR
 ## Set up for development
 Run `poetry install` to install dependencies.  
 This project use [PyO3](https://github.com/PyO3/pyo3) to bind rust code, to use it run `maturin develop --locked --release`  
+To prepare local docker image run `docker build -t top-1m-jarm:latest .`  
 
 ## Running
 This project use docker swarm (might require `docker swarm init`).

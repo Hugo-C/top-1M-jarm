@@ -1,5 +1,6 @@
 import csv
 import datetime
+import logging
 import time
 from typing import Generator
 
@@ -8,6 +9,7 @@ import sentry_sdk
 from halo import Halo
 from rq import Queue
 from sentry_sdk import capture_message
+from sentry_sdk.utils import BadDsn
 
 from top1Mjarm import workers
 from top1Mjarm.config import SENTRY_DSN
@@ -31,7 +33,10 @@ def report_failure(job, connection, type, value, traceback):
 
 
 def main():
-    sentry_sdk.init(dsn=SENTRY_DSN)
+    try:
+        sentry_sdk.init(dsn=SENTRY_DSN)
+    except BadDsn:
+        logging.warning("Sentry could not be initialized with provided DSN")
     enqueue_common_arg = {'on_failure': report_failure, 'result_ttl': RESULT_TTL}
 
     queued_jobs = []
@@ -55,7 +60,7 @@ def main():
                 now = time.time()
                 total_time_spent = datetime.timedelta(seconds=round(now - start_time))
                 domain_wait = datetime.timedelta(seconds=round(now - domain_start_time))
-                spinner.text = f'{i}/{nb_domains}, ' \
+                spinner.text = f'{i + 1}/{nb_domains}, ' \
                                f'waiting for {website.domain} ({domain_wait}), ' \
                                f'total: {total_time_spent}'
                 time.sleep(0.5)
