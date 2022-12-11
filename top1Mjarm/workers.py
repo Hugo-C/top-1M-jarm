@@ -16,16 +16,26 @@ def dns(website: Website) -> Website:
 
 
 def retrieve_dependant_job_result():
+    return get_dependant_job().result
+
+
+def cleanup_dependant_job():
+    job = get_dependant_job()
+    job.cleanup(ttl=1)  # Using 1 allow us to be asynchronous
+
+
+def get_dependant_job():
     current_job = get_current_job(redis_connection)
     jobs = current_job.fetch_dependencies()
-    assert len(jobs) == 1
-    return jobs[0].result
+    assert len(jobs) == 1  # All job have a single dependant
+    return jobs[0]
 
 
 def jarm() -> Website:
     """Fill website's jarm field based on its ip"""
     website = retrieve_dependant_job_result()
     website.jarm = rust.compute_jarm_hash(website.ip)
+    cleanup_dependant_job()
     return website
 
 
@@ -37,4 +47,5 @@ def write_to_csv():
     with open(CSV_RESULT_PATH, 'a') as csv_file:
         website = retrieve_dependant_job_result()
         csv_file.write(website.to_csv_line() + '\n')
+        cleanup_dependant_job()
     return 'OK'

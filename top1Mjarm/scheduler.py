@@ -65,6 +65,7 @@ def main():
                                f'total: {total_time_spent}'
                 time.sleep(0.5)
                 job.refresh()
+            job.cleanup(ttl=1)  # Using 1 allow us to be asynchronous
             progress_bar.update()
     now = time.time()
     total_time_spent = datetime.timedelta(seconds=round(now - start_time))
