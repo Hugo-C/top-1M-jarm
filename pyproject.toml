@@ -6,7 +6,7 @@ authors = ["Hugo CHASTEL"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-rq = "^1.10.1"
+rq = "^1.11.1"
 redis = "^4.3.4"
 maturin = "^0.13.0"
 sentry-sdk = "^1.6.0"
