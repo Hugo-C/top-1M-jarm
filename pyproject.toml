@@ -7,9 +7,9 @@ authors = ["Hugo CHASTEL"]
 [tool.poetry.dependencies]
 python = "^3.10"
 rq = "^1.11.1"
-redis = "^4.3.4"
-maturin = "^0.13.0"
-sentry-sdk = "^1.6.0"
+redis = "^4.4.0"
+maturin = "^0.14.5"
+sentry-sdk = "^1.11.1"
 halo = "^0.0.31"
 shodan-chrono = "^0.1.0"
 
