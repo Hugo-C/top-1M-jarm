@@ -13,7 +13,7 @@ from sentry_sdk.utils import BadDsn
 
 from top1Mjarm import workers
 from top1Mjarm.config import SENTRY_DSN
-from top1Mjarm.domain import Website
+from top1Mjarm.website import Website
 from top1Mjarm.redis_connection import redis_connection
 
 BATCH_SIZE = 1_000

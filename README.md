@@ -34,7 +34,11 @@ This project use [PyO3](https://github.com/PyO3/pyo3) to bind rust code, to use 
 To prepare local docker image run `docker build -t top-1m-jarm:latest .`  
 
 ## Running
-This project use docker swarm (might require `docker swarm init`).
+This project use docker swarm (might require `docker swarm init`).  
+One node has to be marked as a coordinator with:
+`docker node update --label-add coordinator=1 $(docker node inspect --format '{{ .ID }}' self)`.  
+It'll be responsible for input/output files.  
+`result.csv` must also be created via touch (by default `touch ./data/result.csv`).  
 ```shell
 docker stack deploy --compose-file docker-compose.yml top1MjarmStack
 docker stack ls

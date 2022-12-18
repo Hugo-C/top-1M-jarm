@@ -3,7 +3,7 @@ import socket
 import rust
 from rq.job import get_current_job
 
-from top1Mjarm.domain import Website
+from top1Mjarm.website import Website
 from top1Mjarm.redis_connection import redis_connection
 
 CSV_RESULT_PATH = 'result.csv'
