@@ -28,6 +28,10 @@ flowchart LR
    scanResultQueue--> workerAggregation[Aggregates results in a single CSV]
 ```
 
+## A batch of 1k domains being processed (RQ debug view)
+As worker work on priority on the ip queue, few jobs stay in queue there
+[![asciicast](https://asciinema.org/a/547279.png)](https://asciinema.org/a/547279)
+
 ## Set up for development
 Run `poetry install` to install dependencies.  
 This project use [PyO3](https://github.com/PyO3/pyo3) to bind rust code, to use it run `maturin develop --locked --release`  
