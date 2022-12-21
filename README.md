@@ -29,7 +29,7 @@ flowchart LR
 ```
 
 ## A batch of 1k domains being processed (RQ debug view)
-As worker work on priority on the ip queue, few jobs stay in queue there
+*As workers focus on priority on the ip queue, few jobs stay in this queue*
 [![asciicast](https://asciinema.org/a/547279.png)](https://asciinema.org/a/547279)
 
 ## Set up for development
