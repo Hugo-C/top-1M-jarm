@@ -34,8 +34,6 @@ def report_failure(job, connection, type, value, traceback):
 def is_job_failed(job: Job):
     """Return True if the job or any of its dependencies are failed"""
     if job.is_failed:
-        print("FAILED")
-        print(job)
         return True
     else:
         for dependency in job.fetch_dependencies():
@@ -84,7 +82,7 @@ def main():
                 domain_start_time = time.time()
                 while job.result is None:
                     if is_job_failed(job):
-                        logging.warning(f"{website.domain} could not be processed")
+                        logging.info(f"{website.domain} could not be processed")
                         break
 
                     now = time.time()

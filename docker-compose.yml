@@ -58,8 +58,8 @@ services:
         delay: 30s
       resources:
         limits:
-          cpus: '0.5'
-          memory: 100M
+          cpus: '1'
+          memory: 50M
       update_config:
         parallelism: 0  # Restart all at the same time
       mode: replicated
