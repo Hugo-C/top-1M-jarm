@@ -38,7 +38,7 @@ class WebsiteGenerator:
         return batch
 
 
-def is_job_failed(job: Job):
+def is_job_failed(job: Job) -> bool:
     """Return True if the job or any of its dependencies are failed"""
     if job.is_failed:
         return True
@@ -66,22 +66,16 @@ class Scheduler:
         spinner = Halo(spinner='triangle')
         while True:
             # Limit RQ RAM usage by only processing a batch at a time
+            # and then cleaning up manually each job done
             batch = website_generator.make_batch(BATCH_SIZE)
             if not batch:
                 break  # batch is empty, nothing more to process
 
             # Process batch
-            queued_jobs = []
-            for website in batch:
-                dns_job = self.domains_q.enqueue(workers.dns, website, **self.enqueue_common_arg)
-                jarm_job = self.ips_q.enqueue(workers.jarm, depends_on=dns_job, **self.enqueue_common_arg)
-                csv_aggregation_job = self.jarm_result_q.enqueue(workers.write_to_csv, depends_on=jarm_job,
-                                                                 **self.enqueue_common_arg)
-                queued_jobs.append((website, csv_aggregation_job))
-
+            queued_jobs = self.enqueue_batch(batch)
             nb_domains = len(queued_jobs)
-            chrono_message = f"Top 1M jarm batch {batch_number} ({len(queued_jobs)})"
-            with chrono.progress(title=chrono_message, total=len(queued_jobs)) as progress_bar:
+            chrono_message = f"Top 1M jarm batch {batch_number} ({nb_domains})"
+            with chrono.progress(title=chrono_message, total=nb_domains) as progress_bar:
                 for i, (website, job) in enumerate(queued_jobs):
                     spinner.start(text=website.domain)
                     domain_start_time = time.time()
@@ -107,6 +101,16 @@ class Scheduler:
         now = time.time()
         total_time_spent = datetime.timedelta(seconds=round(now - start_time))
         spinner.succeed(text=f'All {total_domain_processed} domains processed in {total_time_spent}')
+
+    def enqueue_batch(self, batch: list[Website]) -> list[tuple]:
+        queued_jobs = []
+        for website in batch:
+            dns_job = self.domains_q.enqueue(workers.dns, website, **self.enqueue_common_arg)
+            jarm_job = self.ips_q.enqueue(workers.jarm, depends_on=dns_job, **self.enqueue_common_arg)
+            csv_aggregation_job = self.jarm_result_q.enqueue(workers.write_to_csv, depends_on=jarm_job,
+                                                             **self.enqueue_common_arg)
+            queued_jobs.append((website, csv_aggregation_job))
+        return queued_jobs
 
 
 if __name__ == '__main__':
