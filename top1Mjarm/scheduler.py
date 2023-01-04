@@ -18,6 +18,8 @@ from top1Mjarm.redis_connection import redis_connection
 
 BATCH_SIZE = 1_000
 RESULT_TTL = None  # results should be kept forever and cleanup manually
+JOB_TIMEOUT = 90  # in seconds, passed to RQ
+JOB_MAX_WAIT = datetime.timedelta(seconds=JOB_TIMEOUT + 1)  # time after which we don't wait for the result
 
 
 class WebsiteGenerator:
@@ -33,7 +35,7 @@ class WebsiteGenerator:
 
     def make_batch(self, batch_size) -> list[Website]:
         batch = []
-        for website, _ in zip(self.generator, range(batch_size)):
+        for _, website in zip(range(batch_size), self.generator):
             batch.append(website)
         return batch
 
@@ -49,10 +51,20 @@ def is_job_failed(job: Job) -> bool:
     return False
 
 
+def job_status(job: Job) -> str:
+    """Return True if the job or any of its dependencies are failed"""
+    status = job.get_status(refresh=True)
+    if status == 'deferred':
+        parent_job = job.fetch_dependencies()
+        if len(parent_job) > 0:
+            return job_status(parent_job[0])
+    return f"{job.func_name} {status}"
+
+
 class Scheduler:
 
     def __init__(self):
-        self.enqueue_common_arg = {'result_ttl': RESULT_TTL}
+        self.enqueue_common_arg = {'job_timeout': JOB_TIMEOUT, 'result_ttl': RESULT_TTL}
 
         self.domains_q = Queue(name='domains', connection=redis_connection)
         self.ips_q = Queue(name='ips', connection=redis_connection)
@@ -91,6 +103,9 @@ class Scheduler:
                                        f'batch #{batch_number}, ' \
                                        f'waiting for {website.domain} ({domain_wait}), ' \
                                        f'total: {total_time_spent}'
+                        if domain_wait > JOB_MAX_WAIT:
+                            spinner.fail(f"{domain_wait} wait for {website.domain}, status: {job_status(job)}\n")
+                            break
                         time.sleep(0.2)
                         job.refresh()
                     job.delete(delete_dependents=True)  # Clean up the job from Redis and its dependencies
