@@ -149,25 +149,25 @@ colorama = ">=0.3.9"
 
 [[package]]
 name = "maturin"
-version = "0.14.5"
+version = "0.14.8"
 description = "Build and publish crates with pyo3, rust-cpython and cffi bindings as well as rust binaries as python packages"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "maturin-0.14.5-py3-none-linux_armv6l.whl", hash = "sha256:b193fc971e462c60142528dd114f06bcc080f7d6ba4cbeaa004000c70ac6c384"},
-    {file = "maturin-0.14.5-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:a251f81cbc96a00e312d83ac62504b4dd91367ba7de104fdab7fce1c8e0ccd5a"},
-    {file = "maturin-0.14.5-py3-none-macosx_10_9_x86_64.macosx_10_9_arm64.macosx_10_9_universal2.whl", hash = "sha256:3ce0d84e96635c3d88c4515e1afeb60407f56ce77e7a23d9f7d255d47ea24c43"},
-    {file = "maturin-0.14.5-py3-none-manylinux_2_12_i686.manylinux2010_i686.musllinux_1_1_i686.whl", hash = "sha256:64b2f6f93137319e24851063eb2f8c6a85c9eecca7956a0ac18f17103868ec5c"},
-    {file = "maturin-0.14.5-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:d0aeaea4758ffab2c80ca1668a7380419d76c37f29e7dc4e5ce9e7d608082ae8"},
-    {file = "maturin-0.14.5-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:a9f3dfa0d3bf1e758fbac01437c85e46e39b44930ae7781a738bb695ff324986"},
-    {file = "maturin-0.14.5-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_1_armv7l.whl", hash = "sha256:711dc58a4f1550383e0ced5e03a2ece1454d73816faa49aed0c47c092c8340ce"},
-    {file = "maturin-0.14.5-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.musllinux_1_1_ppc64le.whl", hash = "sha256:ed1c890e41c0501daf392aac45f222aa116fc232f2a7bb1213e1613b3ada0737"},
-    {file = "maturin-0.14.5-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:091592d631baf3e1a89e3b56f13c981e996ee963b4613051f5c9e81b98bc1c75"},
-    {file = "maturin-0.14.5-py3-none-win32.whl", hash = "sha256:61307cc5be8a6c66fe687f38984d8fb3c4ec523cf1e181c555708ca9433a6c6c"},
-    {file = "maturin-0.14.5-py3-none-win_amd64.whl", hash = "sha256:736c113a483c88be12077b8d8fd85cdd3ec1a794f3754f1b557a2845d33206d6"},
-    {file = "maturin-0.14.5-py3-none-win_arm64.whl", hash = "sha256:f7fa0f7a54bae429f4dda8c600d75e5d0bbb123005977845f1762ec7b76738ec"},
-    {file = "maturin-0.14.5.tar.gz", hash = "sha256:6bda7f9ed636a29f51860fe8b2f8366ccaffee31eb7480c93e07fcd4eecb62bd"},
+    {file = "maturin-0.14.8-py3-none-linux_armv6l.whl", hash = "sha256:5b33943ba04ecbc7ef3367fce87ea938b01482c27bd90ed5f9ef5780e6fac183"},
+    {file = "maturin-0.14.8-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:31cfd290c9e805274302f2193064b0c751f2ae0a8b24a293c39e34ab591f5f80"},
+    {file = "maturin-0.14.8-py3-none-macosx_10_9_x86_64.macosx_10_9_arm64.macosx_10_9_universal2.whl", hash = "sha256:d4983c35cca9779880ab7718589033b4b2123ccbf55a6ab71298e4b11eb8e284"},
+    {file = "maturin-0.14.8-py3-none-manylinux_2_12_i686.manylinux2010_i686.musllinux_1_1_i686.whl", hash = "sha256:f60b67d3ef2a840b38decb0c7174bc0720faa66323384d4d37d26843f71e1213"},
+    {file = "maturin-0.14.8-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:bdaca08a9e65eae4a884a7796f91ae93b3876e6becaa9ca2928f097014949801"},
+    {file = "maturin-0.14.8-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:9d5b2beed1d7e0bcac32d78e201b1f9fb8594771d4f456b290887e0d4eb2598f"},
+    {file = "maturin-0.14.8-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_1_armv7l.whl", hash = "sha256:4fd749a4f27b677448737c57ac040da03d8f2bb26c5dc6967e0a50d7f25aa96a"},
+    {file = "maturin-0.14.8-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.musllinux_1_1_ppc64le.whl", hash = "sha256:a49fddd55e3dfbdb51123e5655a5f6b1e3588bf1cb8988902006873d2e7283c7"},
+    {file = "maturin-0.14.8-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:451e1a1e809a9d1fc6225b5416dd55e6173a91c4cfea0d87b1cde7fd80b637a4"},
+    {file = "maturin-0.14.8-py3-none-win32.whl", hash = "sha256:33c42cd165628104538fa94a237b5386776eea8bdde694f350bbd41529ac881e"},
+    {file = "maturin-0.14.8-py3-none-win_amd64.whl", hash = "sha256:2c9f0a0e0f4d521b1c008dcd132d6a6de0cbbbf1bc7f31e090c19361d7a941dd"},
+    {file = "maturin-0.14.8-py3-none-win_arm64.whl", hash = "sha256:46dae5d02888370c6182972054f9fd6e9ce7d13736f6d3fae4e511d7beb0bf42"},
+    {file = "maturin-0.14.8.tar.gz", hash = "sha256:671aded61175a3e4bcd84d33bd5218d5556235e7049ef67efe3f7fd496da9440"},
 ]
 
 [package.dependencies]
@@ -236,14 +236,14 @@ redis = ">=3.5.0"
 
 [[package]]
 name = "sentry-sdk"
-version = "1.11.1"
+version = "1.12.1"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "sentry-sdk-1.11.1.tar.gz", hash = "sha256:675f6279b6bb1fea09fd61751061f9a90dca3b5929ef631dd50dc8b3aeb245e9"},
-    {file = "sentry_sdk-1.11.1-py2.py3-none-any.whl", hash = "sha256:8b4ff696c0bdcceb3f70bbb87a57ba84fd3168b1332d493fcd16c137f709578c"},
+    {file = "sentry-sdk-1.12.1.tar.gz", hash = "sha256:5bbe4b72de22f9ac1e67f2a4e6efe8fbd595bb59b7b223443f50fe5802a5551c"},
+    {file = "sentry_sdk-1.12.1-py2.py3-none-any.whl", hash = "sha256:9f0b960694e2d8bb04db4ba6ac2a645040caef4e762c65937998ff06064f10d6"},
 ]
 
 [package.dependencies]
@@ -261,6 +261,7 @@ falcon = ["falcon (>=1.4)"]
 fastapi = ["fastapi (>=0.79.0)"]
 flask = ["blinker (>=1.1)", "flask (>=0.11)"]
 httpx = ["httpx (>=0.16.0)"]
+opentelemetry = ["opentelemetry-distro (>=0.350b0)"]
 pure-eval = ["asttokens", "executing", "pure-eval"]
 pymongo = ["pymongo (>=3.1)"]
 pyspark = ["pyspark (>=2.4.4)"]
@@ -331,14 +332,14 @@ files = [
 
 [[package]]
 name = "termcolor"
-version = "2.1.1"
+version = "2.2.0"
 description = "ANSI color formatting for output in terminal"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "termcolor-2.1.1-py3-none-any.whl", hash = "sha256:fa852e957f97252205e105dd55bbc23b419a70fec0085708fc0515e399f304fd"},
-    {file = "termcolor-2.1.1.tar.gz", hash = "sha256:67cee2009adc6449c650f6bcf3bdeed00c8ba53a8cda5362733c53e0a39fb70b"},
+    {file = "termcolor-2.2.0-py3-none-any.whl", hash = "sha256:91ddd848e7251200eac969846cbae2dacd7d71c2871e92733289e7e3666f48e7"},
+    {file = "termcolor-2.2.0.tar.gz", hash = "sha256:dfc8ac3f350788f23b2947b3e6cfa5a53b630b612e6cd8965a015a776020b99a"},
 ]
 
 [package.extras]
@@ -375,14 +376,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "xlsxwriter"
-version = "3.0.3"
+version = "3.0.5"
 description = "A Python module for creating Excel XLSX files."
 category = "main"
 optional = false
-python-versions = ">=3.4"
+python-versions = ">=3.6"
 files = [
-    {file = "XlsxWriter-3.0.3-py3-none-any.whl", hash = "sha256:df0aefe5137478d206847eccf9f114715e42aaea077e6a48d0e8a2152e983010"},
-    {file = "XlsxWriter-3.0.3.tar.gz", hash = "sha256:e89f4a1d2fa2c9ea15cde77de95cd3fd8b0345d0efb3964623f395c8c4988b7f"},
+    {file = "XlsxWriter-3.0.5-py3-none-any.whl", hash = "sha256:a5c97a25b319e92b7eeab6e37593192c4dde718084eff23f045eb1df704dde83"},
+    {file = "XlsxWriter-3.0.5.tar.gz", hash = "sha256:fe2b1e2dec38ef8952e9a41a0290861a052e6771a9f43f5e3d56dc63b7112348"},
 ]
 
 [metadata]
