@@ -1,10 +1,15 @@
 import socket
+from _socket import gaierror
 
 import rust
+import sentry_sdk
 from rq.job import get_current_job
 
 from top1Mjarm.website import Website
 from top1Mjarm.redis_connection import redis_connection
+
+sentry_sdk.init(ignore_errors=[gaierror])  # Ignore potential socket error during dns resolution
+
 
 CSV_RESULT_PATH = 'result.csv'
 
