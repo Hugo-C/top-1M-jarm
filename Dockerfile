@@ -1,4 +1,4 @@
-FROM python:3.11-bullseye
+FROM python:3.10-bullseye
 
 ENV LANG=C.UTF-8 \
   PYTHONPATH="${PYTHONPATH}:/code" \
