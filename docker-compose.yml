@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   scheduler:
-    image: top-1m-jarm:latest
+    image: hugocker/top-1m-jarm:latest
     command: poetry run python /code/top1Mjarm/scheduler.py
     depends_on:
       - redis_queue
@@ -14,6 +14,8 @@ services:
       SHODAN_API_KEY: XXX_SET_SHODAN_API_KEY_XXX  # leave as is if you don't have an aoi key
     volumes:
       - path/to/top-1m.csv:/code/top-1m.csv
+    networks:
+      - rq_network
     deploy:
       placement:
         constraints:
@@ -26,12 +28,18 @@ services:
         limits:
           cpus: '1'
           memory: 100M
+        reservations:
+          memory: 100M
 
   redis_queue:
     image: redis:7-alpine
     command: redis-server --requirepass XXX_SET_REDIS_PASS_XXX
     volumes:
       - ./data/redis_data:/data
+    networks:
+      - rq_network
+    ports:
+      - "6379:6379"  # Optional, only needed if worker access redis directly
     deploy:
       placement:
         constraints:
@@ -42,15 +50,19 @@ services:
         limits:
           cpus: '1'
           memory: 50M
+        reservations:
+          memory: 50M
 
   worker:
-    image: top-1m-jarm:latest
-    command: poetry run rq worker default ips domains --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
+    image: hugocker/top-1m-jarm:latest
+    command: poetry run poetry run python /code/top1Mjarm/rq_bootstrap.py default ips domains
     depends_on:
       - redis_queue
     environment:
-      REDIS_HOST: redis_queue
+      REDIS_HOST: redis_queue  # Use IP for direct connection in case of worker freeze
       REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
+    networks:
+      - rq_network
     deploy:
       restart_policy:
         condition: on-failure
@@ -60,13 +72,15 @@ services:
         limits:
           cpus: '1'
           memory: 50M
+        reservations:
+          memory: 50M
       update_config:
         parallelism: 0  # Restart all at the same time
       mode: replicated
-      replicas: 4
+      replicas: 30
 
   csv_writer:  # Special worker that only take care of writing the csv result file
-    image: top-1m-jarm:latest
+    image: hugocker/top-1m-jarm:latest
     command: poetry run rq worker jarm_result --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
     depends_on:
       - redis_queue
@@ -75,6 +89,8 @@ services:
       REDIS_PASSWORD: XXX_SET_REDIS_PASS_XXX
     volumes:
      - path/to/result.csv:/code/result.csv
+    networks:
+      - rq_network
     deploy:
       placement:
         constraints:
@@ -87,5 +103,10 @@ services:
         limits:
           cpus: '1'
           memory: 100M
+        reservations:
+          memory: 100M
       mode: replicated
       replicas: 1
+
+networks:
+  rq_network:
