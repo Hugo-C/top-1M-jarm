@@ -55,7 +55,7 @@ services:
 
   worker:
     image: hugocker/top-1m-jarm:latest
-    command: poetry run poetry run python /code/top1Mjarm/rq_bootstrap.py default ips domains
+    command: poetry run rq worker default ips domains --with-scheduler --url redis://:XXX_SET_REDIS_PASS_XXX@redis_queue:6379 # --sentry-dsn XXX_SET_SENTRY_DSN_XXX
     depends_on:
       - redis_queue
     environment:
