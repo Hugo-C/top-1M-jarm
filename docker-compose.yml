@@ -27,9 +27,9 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 100M
+          memory: 200M
         reservations:
-          memory: 100M
+          memory: 200M
 
   redis_queue:
     image: redis:7-alpine
@@ -49,9 +49,9 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 50M
+          memory: 500M
         reservations:
-          memory: 50M
+          memory: 500M
 
   worker:
     image: hugocker/top-1m-jarm:latest
@@ -64,6 +64,9 @@ services:
     networks:
       - rq_network
     deploy:
+      placement:
+        constraints:
+          - node.labels.coordinator!=1
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -71,9 +74,9 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 50M
+          memory: 100M
         reservations:
-          memory: 50M
+          memory: 100M
       update_config:
         parallelism: 0  # Restart all at the same time
       mode: replicated
@@ -102,9 +105,9 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 100M
+          memory: 200M
         reservations:
-          memory: 100M
+          memory: 200M
       mode: replicated
       replicas: 1
 

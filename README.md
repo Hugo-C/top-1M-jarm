@@ -2,12 +2,15 @@
 This repo is used to compute the jarm values of top 1 millions website.  
 [More info on jarm](https://engineering.salesforce.com/easily-identify-malicious-servers-on-the-internet-with-jarm-e095edac525a/).
 
-![](https://img.shields.io/badge/status-work%20in%20progress-orange?style=for-the-badge)
+![](https://img.shields.io/badge/status-done-brightgreen?style=for-the-badge)
 ## Output file template
 | alexa rank | domain      | ip             | JARM hash                                                      |
 |------------|-------------|----------------|----------------------------------------------------------------|
 | 1          | google.com  | 216.58.213.78  | 29d3fd00029d29d21c42d43d00041df48f145f65c66577d0b01ecea881c1ba |
 | 2          | youtube.com | 172.217.18.206 | 29d3fd00029d29d21c42d43d00041df48f145f65c66577d0b01ecea881c1ba |
+
+
+Output file from February 2023 scan: [result.csv](output/result.csv) (Alexa rank column has been removed).
 
 ## Architecture
 ```mermaid
@@ -27,6 +30,10 @@ flowchart LR
    workerJARM3 --> scanResultQueue
    scanResultQueue--> workerAggregation[Aggregates results in a single CSV]
 ```
+
+> **Note**  
+> The use of rq and docker compose does really make sense for tasks that are CPU-bond which is not the case here.  
+> Nonetheless with a master and 3 workers (for a total of 5Go of RAM and 8vCPU, so a very modest cluster) it took a day and a half to process ~600k scans.
 
 ## A batch of 1k domains being processed (RQ debug view)
 *As workers focus on priority on the ip queue, few jobs stay in this queue*
