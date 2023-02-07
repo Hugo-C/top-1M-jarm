@@ -2,7 +2,7 @@
 This repo is used to compute the jarm values of top 1 millions website.  
 [More info on jarm](https://engineering.salesforce.com/easily-identify-malicious-servers-on-the-internet-with-jarm-e095edac525a/).
 
-![](https://img.shields.io/badge/status-done-brightgreen?style=for-the-badge)
+[![](https://img.shields.io/badge/status-done-brightgreen?style=for-the-badge)](output/result.csv)
 ## Output file template
 | alexa rank | domain      | ip             | JARM hash                                                      |
 |------------|-------------|----------------|----------------------------------------------------------------|
